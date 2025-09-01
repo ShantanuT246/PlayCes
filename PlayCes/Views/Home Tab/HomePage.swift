@@ -2,6 +2,7 @@ import SwiftUI
 import CoreLocation
 
 struct HomePage: View {
+    private let sampleUser = UserProfile.sampleProfileForHome
     @State private var search: String = ""
     @State private var selectedSport = 0
     @State private var selectedDate = 0
@@ -41,25 +42,25 @@ struct HomePage: View {
                     VStack(spacing: 16) {
                         // Top bar with location and profile
                         HStack {
-//                            NavigationLink(destination: LocationPage()) {
-//                                HStack(alignment: .center, spacing: 8) {
-//                                    Image(systemName: "location.fill")
-//                                        .font(.system(size: 15, weight: .semibold))
-//                                        .foregroundStyle(.white)
-//                                    VStack(alignment: .leading, spacing: 2) {
-//                                        Text(locationService.selectedLocation?.name ?? "Select Location")
-//                                            .font(.headline)
-//                                            .foregroundStyle(.white)
-//                                        Text(locationService.selectedLocation?.area ?? "")
-//                                            .font(.subheadline)
-//                                            .foregroundStyle(.white.opacity(0.8))
-//                                    }
-//                                }
-//                                .padding(.horizontal, 12)
-//                                .padding(.vertical, 8)
-//                                .background(.ultraThinMaterial.opacity(0.7))
-//                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-//                            }
+                            NavigationLink(destination: LocationPage()) {
+                                HStack(alignment: .center, spacing: 8) {
+                                    Image(systemName: "location.fill")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(.white)
+                                    let location = sampleUser.location
+                                    Text("\(location.town)")
+                                        .font(.headline)
+                                        .foregroundStyle(.white)
+                                    Text("\(location.city ?? ""), \(location.country)")
+                                        .fontWeight(.light)
+                                        .foregroundStyle(.white)
+                                        .font(.system(size: 10))
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(.ultraThinMaterial.opacity(0.7))
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            }
                             
                             Spacer()
                             

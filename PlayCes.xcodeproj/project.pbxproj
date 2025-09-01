@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		363BC7702E65F09F00963295 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 363BC76F2E65F09B00963295 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		367225922E5481C2009EF279 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,12 +28,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		363BC76F2E65F09B00963295 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		367225842E5481BE009EF279 /* PlayCes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayCes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		367225912E5481C2009EF279 /* PlayCesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlayCesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3672259B2E5481C2009EF279 /* PlayCesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlayCesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		363BC7712E65F17100963295 /* screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = screenshots;
+			sourceTree = "<group>";
+		};
 		367225862E5481BE009EF279 /* PlayCes */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PlayCes;
@@ -75,6 +85,8 @@
 		3672257B2E5481BE009EF279 = {
 			isa = PBXGroup;
 			children = (
+				363BC7712E65F17100963295 /* screenshots */,
+				363BC76F2E65F09B00963295 /* README.md */,
 				367225862E5481BE009EF279 /* PlayCes */,
 				367225942E5481C2009EF279 /* PlayCesTests */,
 				3672259E2E5481C2009EF279 /* PlayCesUITests */,
@@ -108,6 +120,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				363BC7712E65F17100963295 /* screenshots */,
 				367225862E5481BE009EF279 /* PlayCes */,
 			);
 			name = PlayCes;
@@ -212,6 +225,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				363BC7702E65F09F00963295 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,46 +1,31 @@
+//
+//  ProfilePage.swift
+//  PlayCes
+//
+//  Created by Shantanu Tapole on 25/08/25.
+//
+
 import SwiftUI
-
-// MARK: - Data Models
-struct UserProfile: Codable, Identifiable {
-    let id: UUID
-    var name: String
-    var email: String
-    var phone: String
-    var location: String
-    var memberSince: Date
-    var profileImageUrl: String?
-    var sports: [String]
-    var stats: UserStats
-}
-
-struct UserStats: Codable {
-    var gamesPlayed: Int
-    var hoursPlayed: Int
-    var favoriteSport: String
-    var achievements: [Achievement]
-}
-
-struct Achievement: Codable, Identifiable {
-    let id: UUID
-    let title: String
-    let description: String
-    let iconName: String
-    let dateEarned: Date
-}
+import CoreLocation
 
 // MARK: - Profile View Model
 class ProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile?
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
+
     // Sample data - in a real app, this would come from an API
     private let sampleProfile = UserProfile(
         id: UUID(),
         name: "Alex Johnson",
         email: "alex.johnson@example.com",
         phone: "+1 (555) 123-4567",
-        location: "Pune, India",
+        location: Location(
+            town: "Baner",
+            city: "Pune",
+            country: "India",
+            coordinate: CLLocationCoordinate2D(latitude: 18.5635, longitude: 73.7767)
+        ),
         memberSince: Date().addingTimeInterval(-365 * 86400), // 1 year ago
         profileImageUrl: "https://example.com/profile.jpg",
         sports: ["Football", "Basketball", "Tennis"],
@@ -73,18 +58,18 @@ class ProfileViewModel: ObservableObject {
             ]
         )
     )
-    
+
     func fetchUserProfile() {
         isLoading = true
         errorMessage = nil
-        
+
         // Simulate network request
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.userProfile = self.sampleProfile
             self.isLoading = false
         }
     }
-    
+
     func updateProfile(_ profile: UserProfile) {
         // In a real app, this would send data to an API
         isLoading = true
@@ -212,7 +197,13 @@ struct ProfilePage: View {
                                     .padding(.horizontal)
                                 
                                 InfoRow(icon: "phone", label: "Phone", value: userProfile.phone)
-                                InfoRow(icon: "location", label: "Location", value: userProfile.location)
+                                
+                                // Format location with optional city
+                                InfoRow(
+                                    icon: "location",
+                                    label: "Location",
+                                    value: formatLocation(userProfile.location)
+                                )
                                 
                                 HStack {
                                     Image(systemName: "calendar")
@@ -329,6 +320,15 @@ struct ProfilePage: View {
         }
     }
     
+    private func formatLocation(_ location: Location) -> String {
+        var components = [location.town]
+        if let city = location.city {
+            components.append(city)
+        }
+        components.append(location.country)
+        return components.joined(separator: ", ")
+    }
+    
     private var memberSinceFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM yyyy"
@@ -371,7 +371,7 @@ struct InfoRow: View {
     let icon: String
     let label: String
     let value: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)
@@ -430,21 +430,55 @@ struct EditProfileView: View {
     @Environment(\.dismiss) private var dismiss
     @State var profile: UserProfile
     let viewModel: ProfileViewModel
-    
+
+    @State private var name: String
+    @State private var email: String
+    @State private var phone: String
+    @State private var town: String
+    @State private var city: String
+    @State private var country: String
+
+    init(profile: UserProfile, viewModel: ProfileViewModel) {
+        _profile = State(initialValue: profile)
+        _name = State(initialValue: profile.name)
+        _email = State(initialValue: profile.email)
+        _phone = State(initialValue: profile.phone)
+        _town = State(initialValue: profile.location.town)
+        _city = State(initialValue: profile.location.city ?? "")
+        _country = State(initialValue: profile.location.country)
+        self.viewModel = viewModel
+    }
+
     var body: some View {
         NavigationStack {
             Form {
                 Section("Personal Information") {
-                    TextField("Name", text: $profile.name)
-                    TextField("Email", text: $profile.email)
+                    TextField("Name", text: $name)
+                    TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
-                    TextField("Phone", text: $profile.phone)
-                    TextField("Location", text: $profile.location)
+                    TextField("Phone", text: $phone)
+                    TextField("Town", text: $town)
+                    TextField("City (Optional)", text: $city)
+                    TextField("Country", text: $country)
                 }
-                
+
                 Section {
                     Button("Save Changes") {
+                        // Update the profile with new values
+                        profile.name = name
+                        profile.email = email
+                        profile.phone = phone
+                        
+                        // Update location, handling optional city
+                        let updatedCity = city.isEmpty ? nil : city
+                        profile.location = Location(
+                            town: town,
+                            city: updatedCity,
+                            country: country,
+                            coordinate: profile.location.coordinate
+                        )
+                        
                         viewModel.updateProfile(profile)
                         dismiss()
                     }
